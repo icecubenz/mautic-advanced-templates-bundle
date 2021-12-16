@@ -1,6 +1,7 @@
 <?php
 
 namespace MauticPlugin\MauticAdvancedTemplatesBundle\EventListener;
+
 use Mautic\CampaignBundle\Entity\Lead;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\EmailBundle\EmailEvents;
@@ -56,20 +57,20 @@ class EmailSubscriber extends CommonSubscriber
         if ($event->getEmail()) {
             $subject = $event->getEmail()->getSubject();
             $content = $event->getEmail()->getCustomHtml();
-        }else{
+        } else {
             $subject = $event->getSubject();
             $content = $event->getContent();
         }
 
-        $subject = $this->templateProcessor->processTemplate($subject,  $event->getLead());
+        $subject = $this->templateProcessor->processTemplate($subject, $event->getLead());
         $event->setSubject($subject);
 
-        $content = $this->templateProcessor->processTemplate($content,  $event->getLead());
+        $content = $this->templateProcessor->processTemplate($content, $event->getLead());
         $event->setContent($content);
 
 
-        if ( empty( trim($event->getPlainText()) ) ) {
-            $event->setPlainText( (new PlainTextHelper($content))->getText() );
+        if (empty(trim($event->getPlainText()))) {
+            $event->setPlainText((new PlainTextHelper($content))->getText());
         }
     }
 }

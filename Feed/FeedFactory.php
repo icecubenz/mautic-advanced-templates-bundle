@@ -48,7 +48,5 @@ class FeedFactory
                 return $this->feed->getItems();
                 break;
         }
-
-
     }
 }

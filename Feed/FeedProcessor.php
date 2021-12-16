@@ -26,7 +26,6 @@ class FeedProcessor
     public function __construct(LeadModel $leadModel)
     {
         $this->leadModel = $leadModel;
-
     }
 
     /**
@@ -51,5 +50,4 @@ class FeedProcessor
             return $items;
         }
     }
-
 }

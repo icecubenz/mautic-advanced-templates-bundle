@@ -14,10 +14,10 @@ class Feed
     private $rss;
 
     public function __construct($feed)
-   {
-       $this->feed = $feed;
-       $this->rss = simplexml_load_file($feed);
-   }
+    {
+        $this->feed = $feed;
+        $this->rss = simplexml_load_file($feed);
+    }
 
     /**
      * @return \SimpleXMLElement

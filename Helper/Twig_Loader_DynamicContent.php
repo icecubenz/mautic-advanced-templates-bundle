@@ -96,7 +96,6 @@ class Twig_Loader_DynamicContent implements \Twig_LoaderInterface, \Twig_ExistsL
             throw new Twig_Error_Loader('Template ' . $name . ' does not exist');
         }
         return new Twig_Source($dynamicContent->getContent(), $name);
-
     }
 
     private function aliasForTemplateName($name)
@@ -128,18 +127,19 @@ class Twig_Loader_DynamicContent implements \Twig_LoaderInterface, \Twig_ExistsL
                     ]
                 ],
                 'ignore_paginator' => true,
-            ]);
+            ]
+        );
 
         if (count($result) === 0) {
             return null;
         }
 
         /**** The result array key is the dynamic content ID - So use array_keys and get the first (and only) found key  ****/
-        $keys = array_keys($result);     
-        
-        return $result[$keys[0]]; 
+        $keys = array_keys($result);
+
+        return $result[$keys[0]];
     }
-    
+
     /**
      * Check if we have the source code of a template, given its name.
      *
