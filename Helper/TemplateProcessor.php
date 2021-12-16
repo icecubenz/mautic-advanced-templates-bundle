@@ -52,7 +52,6 @@ class TemplateProcessor
         $this->feedFactory = $feedFactory;
     }
 
-
     /**
      * @param string $content
      * @param array $lead
