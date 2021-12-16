@@ -61,7 +61,7 @@ class TemplateProcessor
     public function processTemplate($content, $lead)
     {
         $this->logger->debug('TemplateProcessor: Processing template');
-        $this->logger->debug('LEAD: ' . var_export($lead, true));
+        $this->logger->debug('CONTACT: ' . var_export($lead, true));
         $content = preg_replace_callback_array([
             TemplateProcessor::$matchTwigBlockRegex => $this->processTwigBlock($lead)
         ], $content);
@@ -91,7 +91,7 @@ class TemplateProcessor
             $this->logger->debug('BLOCK SOURCE: ' . var_export($templateSource, true));
             $template = $this->twigEnv->createTemplate($templateSource);
             $renderedTemplate = $template->render([
-                'lead' => $lead
+                'contact' => $lead
             ]);
             $this->logger->debug('RENDERED BLOCK: ' . var_export($renderedTemplate, true));
             return $renderedTemplate;
