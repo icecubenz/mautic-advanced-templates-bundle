@@ -5,17 +5,20 @@ namespace MauticPlugin\MauticAdvancedTemplatesBundle\Helper;
 use MauticPlugin\MauticAdvancedTemplatesBundle\Feed\FeedFactory;
 use MauticPlugin\MauticCrmBundle\Integration\Salesforce\Object\Lead;
 use Monolog\Logger;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
+use Twig\TwigFilter;
 
 class TemplateProcessor
 {
-
     /**
      * @var Logger
      */
     protected $logger;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twigEnv;
     private $twigDynamicContentLoader;
@@ -42,8 +45,8 @@ class TemplateProcessor
         $this->logger = $logger;
         $this->twigDynamicContentLoader = $twigDynamicContentLoader;
         $logger->debug('TemplateProcessor: created $twigDynamicContentLoader');
-        $this->twigEnv = new \Twig_Environment(new \Twig_Loader_Chain([
-            $twigDynamicContentLoader, new \Twig_Loader_Array([])
+        $this->twigEnv = new Environment(new ChainLoader([
+            $twigDynamicContentLoader, new ArrayLoader([])
         ]));
         $this->configureTwig($this->twigEnv);
         $this->feedFactory = $feedFactory;
@@ -67,16 +70,16 @@ class TemplateProcessor
         return $content;
     }
 
-    protected function configureTwig(\Twig_Environment $twig)
+    protected function configureTwig(Environment $twig)
     {
         // You might want to register some custom TWIG tags or functions here
 
         // TWIG filter json_decode
-        $twig->addFilter(new \Twig_SimpleFilter('json_decode', function ($string) {
+        $twig->addFilter(new TwigFilter('json_decode', function ($string) {
             return json_decode($string, true);
         }));
 
-        $twig->addFilter(new \Twig_SimpleFilter('rss', function () {
+        $twig->addFilter(new TwigFilter('rss', function () {
             return $this->feedFactory->getItems($this->lead['id'], func_get_args());
         }));
     }

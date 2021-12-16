@@ -72,7 +72,6 @@ class EmailSubscriber implements EventSubscriberInterface
         $content = $this->templateProcessor->processTemplate($content, $event->getLead());
         $event->setContent($content);
 
-
         if (empty(trim($event->getPlainText()))) {
             $event->setPlainText((new PlainTextHelper($content))->getText());
         }
