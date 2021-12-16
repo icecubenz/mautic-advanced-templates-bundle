@@ -17,8 +17,6 @@ This plugin was tested with:
 
 This plugin uses Twig v3.
 
-There is a high probability it is compatible with other environments, but we never tested it.
-
 ### Features
 
 * TWIG templates could be used in the emails. Just create an email and put your TWIG template between special tags:
