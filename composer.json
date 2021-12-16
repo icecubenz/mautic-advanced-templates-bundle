@@ -1,5 +1,6 @@
 {
   "name": "icecubenz/mautic-advanced-templates-bundle",
+  "license": "MIT",
   "type": "mautic-plugin",
   "extra": {
     "install-directory-name": "MauticAdvancedTemplatesBundle"
