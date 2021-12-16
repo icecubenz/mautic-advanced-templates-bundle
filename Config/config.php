@@ -3,7 +3,7 @@
 return [
     'name'        => 'Advanced Templates',
     'description' => 'Plugin extends default email template capabilities with TWIG block so you can use advanced scripting techniques like conditions, loops etc',
-    'version'     => '2.1',
+    'version'     => '2.5',
     'author'      => 'Dmitry Berezovsky',
     'services' => [
         'events' => [
@@ -13,7 +13,8 @@ return [
                 'arguments' => [
                     'monolog.logger.mautic',
                     'mautic.plugin.advanced_templates.helper.template_processor',
-                    'mautic.email.model.email'
+                    'mautic.email.model.email',
+                    'mautic.lead.model.lead'
                 ]
             ]
         ],

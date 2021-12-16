@@ -65,8 +65,8 @@ The table below explains which variables are exposed to the context. Also it con
 
 | Entity      | Type     | Description                              | Example                                  |
 | ----------- | -------- | ---------------------------------------- | ---------------------------------------- |
-| lead        | Variable | Holds a Lead entity (contact). You should refer fields by alias name (see example). | `{{lead.firstname}}`, `{{lead.country}}` |
-| json_decode | Filter   | Converts string in JSON format into object. | `{% set cart = lead.cart \| json_decode %}` In this sample we declare variable `cart` which will hold deserialized cart. |
+| contact        | Variable | Holds a Contact entity (lead). You should refer fields by alias name (see example). | `{{contact.firstname}}`, `{{contact.country}}` |
+| json_decode | Filter   | Converts string in JSON format into object. | `{% set cart = contact.cart \| json_decode %}` In this sample we declare variable `cart` which will hold deserialized cart. |
 
 
 ### Example 1: Basic scenario
@@ -79,8 +79,8 @@ Let's say you'd like to add an extra paragraph about weather in New York for peo
 
 ```twig
 {% TWIG_BLOCK %}
-    <p>Hi {{lead.firstname}},</p>
-    {% if lead.city == 'New York' %}
+    <p>Hi {{contact.firstname}},</p>
+    {% if contact.city == 'New York' %}
         <p>What a great weather is in New York this week!</p>
     {% endif %}
 
@@ -107,7 +107,7 @@ Thus, in order to render all items, you should code something like this:
 
 ```twig
 {% TWIG_BLOCK %}
-    {% set cart = lead.cart | json_decode %}
+    {% set cart = contact.cart | json_decode %}
     Your cart:
     <ul>
     {% for item in cart %}
@@ -134,7 +134,7 @@ Let's continue with the previous example but turn template for rendering a singl
 
 ```twig
 {% TWIG_BLOCK %}
-    {% set cart = lead.cart | json_decode %}
+    {% set cart = contact.cart | json_decode %}
     Your cart:
     <ul>
     {% for item in cart %}
@@ -149,7 +149,7 @@ Notice prefix `dc:` which instructs template resolver to look for dynamic conten
 
 ```twig
 {% TWIG_BLOCK %}
-    {% set items = 'http://domain.tld/feed/' | rss %}
+    {% set items = 'https://domain.tld/feed/' | rss %}
     <ul>
     {% for item in items %}
         <li>
@@ -183,9 +183,25 @@ https://www.w3schools.com/xml/rss_tag_category_item.asp
 {% END_TWIG_BLOCK %}
 ```
 
+### Example 6: Using `contact.tags`
+
+```twig
+{% TWIG_BLOCK %}
+    {% set tags = contact.tags %}
+    Tags:
+    <ul>
+        {% for tag in tags %}
+        <li>{{tag}}</li>
+        {% endfor %}
+    </ul>
+{% END_TWIG_BLOCK %}
+```
+
 ## Credits
 
 Dmitry Berezovsky, Logicify ([http://logicify.com/](https://logicify.com/?utm_source=github&utm_campaign=mautic-templates&utm_medium=opensource))
+
+Robert Coleman, [https://github.com/rjocoleman](https://github.com/rjocoleman)
 
 ## Disclaimer
 
