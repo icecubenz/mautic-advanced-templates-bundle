@@ -1,33 +1,38 @@
 <?php
 
 namespace MauticPlugin\MauticAdvancedTemplatesBundle\EventListener;
-use Mautic\CampaignBundle\Entity\Lead;
-use Mautic\CoreBundle\EventListener\CommonSubscriber;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Event as Events;
 use Mautic\EmailBundle\Helper\PlainTextHelper;
-use Mautic\CoreBundle\Exception as MauticException;
 use MauticPlugin\MauticAdvancedTemplatesBundle\Helper\TemplateProcessor;
-use Psr\Log\LoggerInterface;
+use Monolog\Logger;
 
 /**
  * Class EmailSubscriber.
  */
-class EmailSubscriber extends CommonSubscriber
+class EmailSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var TokenHelper $tokenHelper ;
+     * @var TemplateProcessor $templateProcessor;
      */
     protected $templateProcessor;
 
+    /**
+     * @var Logger
+     */
+    protected $logger;
 
     /**
      * EmailSubscriber constructor.
      *
-     * @param TokenHelper $tokenHelper
+     * @param Logger $templateProcessor
+     * @param TemplateProcessor $templateProcessor
      */
-    public function __construct(TemplateProcessor $templateProcessor)
+    public function __construct(Logger $logger, TemplateProcessor $templateProcessor)
     {
+        $this->logger = $logger;
         $this->templateProcessor = $templateProcessor;
     }
     /**
@@ -56,20 +61,19 @@ class EmailSubscriber extends CommonSubscriber
         if ($event->getEmail()) {
             $subject = $event->getEmail()->getSubject();
             $content = $event->getEmail()->getCustomHtml();
-        }else{
+        } else {
             $subject = $event->getSubject();
             $content = $event->getContent();
         }
 
-        $subject = $this->templateProcessor->processTemplate($subject,  $event->getLead());
+        $subject = $this->templateProcessor->processTemplate($subject, $event->getLead());
         $event->setSubject($subject);
 
-        $content = $this->templateProcessor->processTemplate($content,  $event->getLead());
+        $content = $this->templateProcessor->processTemplate($content, $event->getLead());
         $event->setContent($content);
 
-
-        if ( empty( trim($event->getPlainText()) ) ) {
-            $event->setPlainText( (new PlainTextHelper($content))->getText() );
+        if (empty(trim($event->getPlainText()))) {
+            $event->setPlainText((new PlainTextHelper($content))->getText());
         }
     }
 }

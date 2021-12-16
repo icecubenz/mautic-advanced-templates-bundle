@@ -11,6 +11,7 @@ return [
             'mautic.plugin.advanced_templates.email.subscriber' => [
                 'class'     => \MauticPlugin\MauticAdvancedTemplatesBundle\EventListener\EmailSubscriber::class,
                 'arguments' => [
+                    'monolog.logger.mautic',
                     'mautic.plugin.advanced_templates.helper.template_processor'
                 ]
             ]
@@ -41,10 +42,9 @@ return [
             'mautic.plugin.advanced_templates.helper.feed_processor' => [
                 'class' => \MauticPlugin\MauticAdvancedTemplatesBundle\Feed\FeedProcessor::class,
                 'arguments' => [
-                    'mautic.lead.model.lead',
+                    'mautic.lead.model.lead'
                 ]
             ],
-
         ]
     ]
 ];
