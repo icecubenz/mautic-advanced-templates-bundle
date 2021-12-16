@@ -9,6 +9,7 @@ use Mautic\EmailBundle\Helper\PlainTextHelper;
 use MauticPlugin\MauticAdvancedTemplatesBundle\Helper\TemplateProcessor;
 use Mautic\EmailBundle\Entity\Email;
 use Mautic\EmailBundle\Model\EmailModel;
+use Mautic\LeadBundle\Model\LeadModel;
 use Monolog\Logger;
 
 /**
@@ -32,17 +33,22 @@ class EmailSubscriber implements EventSubscriberInterface
     private $emailModel;
 
     /**
+     * @var LeadModel
+     */
+    private $leadModel;
+
+    /**
      * EmailSubscriber constructor.
      *
      * @param Logger $templateProcessor
      * @param TemplateProcessor $templateProcessor
      */
-    public function __construct(Logger $logger, TemplateProcessor $templateProcessor, EmailModel $emailModel)
+    public function __construct(Logger $logger, TemplateProcessor $templateProcessor, EmailModel $emailModel, LeadModel $leadModel)
     {
         $this->logger            = $logger;
         $this->templateProcessor = $templateProcessor;
         $this->emailModel        = $emailModel;
-
+        $this->leadModel         = $leadModel;
     }
     /**
      * @return array
@@ -73,10 +79,20 @@ class EmailSubscriber implements EventSubscriberInterface
             $email = $this->emailModel->getEntity($emailId);
         }
 
-        $subject = $this->templateProcessor->processTemplate($email->getSubject(), $event->getLead());
+        $contact = $event->getLead();
+        $leadModel = $this->leadModel->getEntity($contact['id']);
+        $contact['tags'] = [];
+
+        if ($leadModel && count($leadModel->getTags()) > 0) {
+            foreach ($leadModel->getTags() as $tag) {
+                $contact['tags'][$tag->getId()] = $tag->getTag();
+            }
+        }
+
+        $subject = $this->templateProcessor->processTemplate($email->getSubject(), $contact);
         $event->setSubject($subject);
 
-        $content = $this->templateProcessor->processTemplate($email->getCustomHtml(), $event->getLead());
+        $content = $this->templateProcessor->processTemplate($email->getCustomHtml(), $contact);
         // $event->setContent($content); would be ideal, however it disables the tracking pixel, so we recreate it without tracking pixel disabled.
 
         if ($event->getHelper()) {

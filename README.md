@@ -183,6 +183,20 @@ https://www.w3schools.com/xml/rss_tag_category_item.asp
 {% END_TWIG_BLOCK %}
 ```
 
+### Example 6: Using `contact.tags`
+
+```twig
+{% TWIG_BLOCK %}
+    {% set tags = contact.tags %}
+    Tags:
+    <ul>
+        {% for tag in tags %}
+        <li>{{tag}}</li>
+        {% endfor %}
+    </ul>
+{% END_TWIG_BLOCK %}
+```
+
 ## Credits
 
 Dmitry Berezovsky, Logicify ([http://logicify.com/](https://logicify.com/?utm_source=github&utm_campaign=mautic-templates&utm_medium=opensource))
