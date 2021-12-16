@@ -4,13 +4,13 @@ namespace MauticPlugin\MauticAdvancedTemplatesBundle\Helper;
 
 use MauticPlugin\MauticAdvancedTemplatesBundle\Feed\FeedFactory;
 use MauticPlugin\MauticCrmBundle\Integration\Salesforce\Object\Lead;
-use Psr\Log\LoggerInterface;
+use Monolog\Logger;
 
 class TemplateProcessor
 {
 
     /**
-     * @var LoggerInterface
+     * @var Logger
      */
     protected $logger;
 
@@ -33,11 +33,11 @@ class TemplateProcessor
     /**
      * TemplateProcessor constructor.
      *
-     * @param LoggerInterface            $logger
+     * @param Logger            $logger
      * @param Twig_Loader_DynamicContent $twigDynamicContentLoader
      * @param FeedFactory                $feedFactory
      */
-    public function __construct(LoggerInterface $logger, Twig_Loader_DynamicContent $twigDynamicContentLoader, FeedFactory $feedFactory)
+    public function __construct(Logger $logger, Twig_Loader_DynamicContent $twigDynamicContentLoader, FeedFactory $feedFactory)
     {
         $this->logger = $logger;
         $this->twigDynamicContentLoader = $twigDynamicContentLoader;

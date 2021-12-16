@@ -4,7 +4,7 @@ namespace MauticPlugin\MauticAdvancedTemplatesBundle\Helper;
 
 use Mautic\CoreBundle\Factory\ModelFactory;
 use Mautic\DynamicContentBundle\Entity\DynamicContent;
-use Psr\Log\LoggerInterface;
+use Monolog\Logger;
 use Twig_Error_Loader;
 use Twig_Source;
 use Twig\Loader\ExistsLoaderInterface;
@@ -20,16 +20,16 @@ class Twig_Loader_DynamicContent implements LoaderInterface, ExistsLoaderInterfa
      */
     private $modelFactory;
     /**
-     * @var LoggerInterface
+     * @var Logger
      */
     protected $logger;
 
     /**
      * Twig_Loader_DynamicContent constructor.
-     * @param LoggerInterface $logger
+     * @param Logger $logger
      * @param ModelFactory $modelFactory
      */
-    public function __construct(LoggerInterface $logger, ModelFactory $modelFactory)
+    public function __construct(Logger $logger, ModelFactory $modelFactory)
     {
         $this->modelFactory = $modelFactory;
         $this->logger = $logger;
