@@ -2,12 +2,10 @@
 
 namespace MauticPlugin\MauticAdvancedTemplatesBundle\EventListener;
 
-use Mautic\CampaignBundle\Entity\Lead;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Event as Events;
 use Mautic\EmailBundle\Helper\PlainTextHelper;
-use Mautic\CoreBundle\Exception as MauticException;
 use MauticPlugin\MauticAdvancedTemplatesBundle\Helper\TemplateProcessor;
 use Psr\Log\LoggerInterface;
 
@@ -17,7 +15,7 @@ use Psr\Log\LoggerInterface;
 class EmailSubscriber extends CommonSubscriber
 {
     /**
-     * @var TokenHelper $tokenHelper ;
+     * @var TemplateProcessor $templateProcessor;
      */
     protected $templateProcessor;
 
@@ -25,7 +23,7 @@ class EmailSubscriber extends CommonSubscriber
     /**
      * EmailSubscriber constructor.
      *
-     * @param TokenHelper $tokenHelper
+     * @param TemplateProcessor $templateProcessor
      */
     public function __construct(TemplateProcessor $templateProcessor)
     {
