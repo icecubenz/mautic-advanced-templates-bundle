@@ -7,6 +7,8 @@ use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Event as Events;
 use Mautic\EmailBundle\Helper\PlainTextHelper;
 use MauticPlugin\MauticAdvancedTemplatesBundle\Helper\TemplateProcessor;
+use Mautic\EmailBundle\Entity\Email;
+use Mautic\EmailBundle\Model\EmailModel;
 use Monolog\Logger;
 
 /**
@@ -25,15 +27,22 @@ class EmailSubscriber implements EventSubscriberInterface
     protected $logger;
 
     /**
+     * @var EmailModel
+     */
+    private $emailModel;
+
+    /**
      * EmailSubscriber constructor.
      *
      * @param Logger $templateProcessor
      * @param TemplateProcessor $templateProcessor
      */
-    public function __construct(Logger $logger, TemplateProcessor $templateProcessor)
+    public function __construct(Logger $logger, TemplateProcessor $templateProcessor, EmailModel $emailModel)
     {
-        $this->logger = $logger;
+        $this->logger            = $logger;
         $this->templateProcessor = $templateProcessor;
+        $this->emailModel        = $emailModel;
+
     }
     /**
      * @return array
@@ -41,7 +50,7 @@ class EmailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            EmailEvents::EMAIL_ON_SEND => ['onEmailGenerate', 300],
+            EmailEvents::EMAIL_ON_SEND    => ['onEmailGenerate', 0],
             EmailEvents::EMAIL_ON_DISPLAY => ['onEmailGenerate', 0],
         ];
     }
@@ -58,22 +67,26 @@ class EmailSubscriber implements EventSubscriberInterface
     {
         $this->logger->info('onEmailGenerate MauticAdvancedTemplatesBundle\EmailSubscriber');
 
-        if ($event->getEmail()) {
-            $subject = $event->getEmail()->getSubject();
-            $content = $event->getEmail()->getCustomHtml();
-        } else {
-            $subject = $event->getSubject();
-            $content = $event->getContent();
+        $email   = $event->getEmail();
+        $emailId = ($email) ? $email->getId() : null;
+        if (!$email instanceof Email) {
+            $email = $this->emailModel->getEntity($emailId);
         }
 
-        $subject = $this->templateProcessor->processTemplate($subject, $event->getLead());
+        $subject = $this->templateProcessor->processTemplate($email->getSubject(), $event->getLead());
         $event->setSubject($subject);
 
-        $content = $this->templateProcessor->processTemplate($content, $event->getLead());
-        $event->setContent($content);
+        $content = $this->templateProcessor->processTemplate($email->getCustomHtml(), $event->getLead());
+        // $event->setContent($content); would be ideal, however it disables the tracking pixel, so we recreate it without tracking pixel disabled.
 
-        if (empty(trim($event->getPlainText()))) {
-            $event->setPlainText((new PlainTextHelper($content))->getText());
+        if ($event->getHelper()) {
+            $event->getHelper()->setBody($content);
+        } else {
+            $event->setContent($content);
+        }
+        // this forces generated plaintext with our new content, if it's not staticly set.
+        if (empty($email->getPlainText())) {
+            $event->setPlainText('');
         }
     }
 }
