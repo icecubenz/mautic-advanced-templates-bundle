@@ -3,7 +3,7 @@
 return [
     'name'        => 'Advanced Templates',
     'description' => 'Plugin extends default email template capabilities with TWIG block so you can use advanced scripting techniques like conditions, loops etc',
-    'version'     => '2.0',
+    'version'     => '2.1',
     'author'      => 'Dmitry Berezovsky',
     'services' => [
         'events' => [
