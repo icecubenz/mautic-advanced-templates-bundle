@@ -1,7 +1,11 @@
 {
-  "name": "logicify/mautic-advanced-templates-bundle",
+  "name": "icecubenz/mautic-advanced-templates-bundle",
   "type": "mautic-plugin",
+  "extra": {
+    "install-directory-name": "MauticAdvancedTemplatesBundle"
+  },
   "require": {
-    "mautic/composer-plugin": "^1.0"
+    "mautic/core-lib": "^4.0",
+    "twig/twig": "^3"
   }
 }
