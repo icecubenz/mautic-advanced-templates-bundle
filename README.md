@@ -66,6 +66,8 @@ The table below explains which variables are exposed to the context. Also it con
 | contact        | Variable | Holds a Contact entity (lead). You should refer fields by alias name (see example). | `{{contact.firstname}}`, `{{contact.country}}` |
 | json_decode | Filter   | Converts string in JSON format into object. | `{% set cart = contact.cart \| json_decode %}` In this sample we declare variable `cart` which will hold deserialized cart. |
 
+For easier debugging twig block content can be previewed in the webui with a real contact by adding the query-string `leadId` when previewing an email. e.g. `https://mautic.example.com/email/preview/1?leadId=100` this does not effect standard tokens / variables in the template.
+
 
 ### Example 1: Basic scenario
 

@@ -14,7 +14,8 @@ return [
                     'monolog.logger.mautic',
                     'mautic.plugin.advanced_templates.helper.template_processor',
                     'mautic.email.model.email',
-                    'mautic.lead.model.lead'
+                    'mautic.lead.model.lead',
+                    'request_stack'
                 ]
             ]
         ],

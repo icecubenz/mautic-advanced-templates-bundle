@@ -10,6 +10,7 @@ use MauticPlugin\MauticAdvancedTemplatesBundle\Helper\TemplateProcessor;
 use Mautic\EmailBundle\Entity\Email;
 use Mautic\EmailBundle\Model\EmailModel;
 use Mautic\LeadBundle\Model\LeadModel;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Monolog\Logger;
 
 /**
@@ -38,17 +39,23 @@ class EmailSubscriber implements EventSubscriberInterface
     private $leadModel;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * EmailSubscriber constructor.
      *
      * @param Logger $templateProcessor
      * @param TemplateProcessor $templateProcessor
      */
-    public function __construct(Logger $logger, TemplateProcessor $templateProcessor, EmailModel $emailModel, LeadModel $leadModel)
+    public function __construct(Logger $logger, TemplateProcessor $templateProcessor, EmailModel $emailModel, LeadModel $leadModel, RequestStack $requestStack)
     {
         $this->logger            = $logger;
         $this->templateProcessor = $templateProcessor;
         $this->emailModel        = $emailModel;
         $this->leadModel         = $leadModel;
+        $this->requestStack      = $requestStack;
     }
     /**
      * @return array
@@ -79,7 +86,18 @@ class EmailSubscriber implements EventSubscriberInterface
             $email = $this->emailModel->getEntity($emailId);
         }
 
-        $contact = $event->getLead();
+        $leadId = (int) $this->requestStack->getCurrentRequest()->get('leadId');
+        if ($event->getIdHash() == 'xxxxxxxxxxxxxx' && (bool) $leadId) {
+            $lead = $this->leadModel->getEntity($leadId);
+            if (null !== $lead) {
+                $contact = $lead->getProfileFields();
+            } else {
+                $contact = array('id' => 0);
+            }
+        } else {
+            $contact = $event->getLead();
+        }
+
         $leadModel = $this->leadModel->getEntity($contact['id']);
         $contact['tags'] = [];
 
